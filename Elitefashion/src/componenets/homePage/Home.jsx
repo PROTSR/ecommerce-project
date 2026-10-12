@@ -51,20 +51,20 @@ const Home = () => {
       <div className='mt-10 flex flex-col justify-center items-center gap-4  '>
         <h3 className='font-bold'>MATCH THE MOOD</h3>
         <div className='   grid grid-cols-12 w-[60%] text-center gap-2'>
-          <div className='col-span-4 h-122 text-mist-200 text-2xl bg-gray-200 bg-[url(C:\Users\Tushar\Desktop\clgproject\EliteFashion\src\assets\img3.jpg)]  bg-no-repeat bg-cover font-bold'>
+          <div className='col-span-4 h-122 text-mist-200 text-2xl bg-gray-200 bg-[url(\img3.jpg)]  bg-no-repeat bg-cover font-bold'>
             FORMAL <br/> <span className='text-amber-400 font-bold text-2xl'>WEAR</span> 
           </div>
           <div className='col-span-4 flex flex-col justify-between h-122'> 
 
-            <div className=' h-60 bg-gray-300 text-2xl font-bold
+            <div className=' h-60  bg-gray-300 text-2xl font-bold
           bg-[url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQO9rriULvLV5e5U3v6GIyC14yXmJnePEk00nibtlrz4A&s)] bg-no-repeat bg-cover'
             >BASICS <span className='text-amber-700 font-bold text-2xl' >WEAR</span>
             </div>
-            <div className=' h-60 text-2xl font-bold bg-gray-400 bg-[url(C:\Users\Tushar\Desktop\clgproject\EliteFashion\src\assets\im2.jpg)] bg-no-repeat bg-cover '>
+            <div className={ `h-60  text-2xl font-bold bg-gray-400 bg-[url(/im2.jpg)] bg-no-repeat bg-cover `}>
               LUXURY <span className='text-amber-700 font-bold text-2xl' >CURATED</span>
             </div>
           </div>
-          <div className='col-span-4 h-122 text-amber-400 font-bold text-2xl bg-gray-500 bg-[url(C:\Users\Tushar\Desktop\clgproject\EliteFashion\src\assets\img3.jpg)]  bg-cover'>
+          <div className="col-span-4 h-122 text-amber-400 font-bold text-2xl bg-gray-500 bg-[url(/img3.jpg)]  bg-cover">
             TRENDING
           </div>
         </div>

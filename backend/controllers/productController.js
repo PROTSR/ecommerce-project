@@ -141,14 +141,16 @@ const addToCart = async (req, res) => {
 const addOrder = async (req, res) => {
     try {
         const { userId } = req.userInfo
-        const { orderItems } = req.body
+        const { orderItems, customerId, taxPrice, shippingCharge, totalPrice,paymentResult,paymentType, paymentDetail,shippingAddress,isDelevered,isPaid,paidAt} = req.body
+
+
+        
 
         if (!orderItems || orderItems.length === 0) {
             return res.status(400).json({ message: 'no order items provided' })
         }
-
-        let total = 0
-        let formattedOrder =[]
+        let subTotal = 0
+        let formattedOrder = []
 
         for (const item of orderItems) {
             const product = await Product.findOne({ 'size.color.sku': item.sku })
@@ -171,31 +173,54 @@ const addOrder = async (req, res) => {
                 }
             }
 
-            if(colorVArientObj.stock < item.quantity){
-               return res.status(400).json({ message: `${product.name} is out of stock` });
+            if (colorVArientObj.stock < item.quantity) {
+                return res.status(400).json({ message: `${product.name} is out of stock` });
             }
 
             colorVArientObj.stock -= item.quantity
 
-            total += (sizeObj.price + item.quantity)
+            subTotal += (sizeObj.price * item.quantity)
 
             await product.save()
 
             formattedOrder.push({
-                
+                color: item.color,
+                name: item.name,
+                size: sizeObj.size,
+                image:item.image,
+                price: sizeObj.price,
+                quantity: item.quantity,
+                sku: item.sku
             })
 
-            // const newOrder = await Order.create(order)
-            // if (!newOrder) {
+        }
+        const tax = (subTotal * 8) / 100
 
-            // }
-            res.status(201).json({ message: 'Order added successfully' })
-        }
-        
-    }catch (error) {
-            res.status(500).json({ message: `something wrong ${error}` })
-        }
+        const newOrder = await Order.create({
+            customerId: userId,
+            orderItems: formattedOrder,
+            taxPrice: tax,
+            shippingCharge: 15,
+            totalPrice: subTotal + tax + 15,
+            paymentType: paymentType,
+            paymentDetail: paymentDetail,
+            paymentResult: paymentResult,
+            shippingAddress:shippingAddress,
+            isPaid: isPaid,
+            paidAt: paidAt,
+            isDelevered: isDelevered,
+            deleveredAt:null
+        })
+        // if (!newOrder) {
+
+        // }
+        res.status(201).json({ message: 'Order added successfully', data: newOrder })
+
+
+    } catch (error) {
+        res.status(500).json({ message: `something wrong ${error}` })
     }
+}
 
 
 module.exports = { deleteProduct, updateProduct, AddProduct, getProductById, getAllProducts, addToCart, addOrder }

@@ -118,6 +118,7 @@ export default function PaymentCheckout() {
       console.log(response.data)
       setPaymentDetail({})
       setIsOrderPlaced(true);
+      localStorage.removeItem('cart')
     } catch (error) {
       console.log(error)
     }

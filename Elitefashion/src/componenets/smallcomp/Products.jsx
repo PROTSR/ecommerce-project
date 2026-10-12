@@ -51,7 +51,7 @@ const Products = () => {
 
   const updateQuantity = (delta) => {
     setQuantity((prev) => Math.max(1, prev + delta))
-    setNewCartItem((prev) => ({ ...prev, quantity: quantity }))
+    // setNewCartItem((prev) => ({ ...prev, quantity: quantity }))
   }
 
 
@@ -62,6 +62,7 @@ const Products = () => {
     const newCart = {
       name: productDetail.name || '',
       price: sizeObj.price,
+      image:productDetail.images[0],
       size: sizeObj.size,
       color: selectColor.color,
       quantity: quantity,
