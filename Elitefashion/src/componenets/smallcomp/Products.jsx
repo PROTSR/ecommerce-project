@@ -137,7 +137,7 @@ const Products = () => {
             </div>
 
           </div>
-          <span className='text-2xl font-bold text-purple-700'>5400/-</span>
+          <span className='text-2xl font-bold text-purple-700'>{currentPrice}</span>
           <div className=' flex items-center '>
             <button className='h-8 w-8 border-black border font-bold text-purple-700 text-lg'
               onClick={() => updateQuantity(-1)}

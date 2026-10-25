@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { User, Package, CheckCircle, Edit3, X, Save, Clock, ChevronRight } from 'lucide-react';
 import { ThemData } from '../../contex/Theme';
-import { getUser, UpdateProfile } from '../../contex/Api';
+import { getUser, UpdateProfile, UserLogout } from '../../contex/Api';
 import { useNavigate } from 'react-router-dom';
 
 const INITIAL_ORDERS = [
@@ -38,7 +38,7 @@ const INITIAL_ORDERS = [
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { setUserDetail, userDetail,userToken, setUserToken,getUserDetail } = useContext(ThemData);
+  const { setUserDetail, userDetail,loading } = useContext(ThemData);
   const [activeTab, setActiveTab] = useState('personal');
   const [user, setUser] = useState(userDetail || {});
   const [isEditing, setIsEditing] = useState(false);
@@ -47,7 +47,7 @@ export default function Profile() {
 
   // Sync local state when userDetail context updates
   useEffect(() => {
-    if (userDetail && Object.keys(userDetail).length > 0) {
+    if (userDetail ) {
       setUser(userDetail);
       setFormData(userDetail);
     }
@@ -112,10 +112,13 @@ export default function Profile() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('usertoken');
-    setUserToken(null)
-    setUserDetail(null);
-    navigate('/login');
+    try {
+      const response = UserLogout()
+      setUserDetail(null);
+      navigate('/login');
+    } catch (error) {
+       throw error
+    }
   };
 
   return (

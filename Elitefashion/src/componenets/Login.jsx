@@ -1,12 +1,12 @@
 import React, { useContext, useState ,useEffect} from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
-import { LoginMethod } from '../contex/Api';
+import { getUser, LoginMethod } from '../contex/Api';
 import { ThemData } from '../contex/Theme';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { setUserToken,userDetail,setUserDetail,userToken } = useContext(ThemData)
+  const { userDetail,setUserDetail } = useContext(ThemData)
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -68,15 +68,20 @@ export default function Login() {
     try {
       const response = await LoginMethod(formData);
 
-      if (response.status !== 200) {
-        return console.log('api failed')
+      if (response.status === 200) {
+        try {
+          const userData = await getUser()
+
+          if(!userData.data?.isAuthenticated){
+            setApiError('can not get fetch user details')
+          }
+          setUserDetail(userData.data?.data)
+
+        } catch (error) {
+          throw error
+        }
       }
-      const Token = response.data?.AccessToken;
-      if (Token) {
-        setUserToken(Token)
-        localStorage.setItem('usertoken', Token)
-        
-      }
+      console.log(response.data)
 
       setFormData({ email: '', password: '', rememberMe: false });
       navigate('/');

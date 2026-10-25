@@ -98,12 +98,10 @@ const UserLogin = async (req, res) => {
                 expiresIn: '1h'
             }
         )
-        // res.cookie('token', AccessToken)
+        res.cookie('token', AccessToken)
 
         return res.status(200).json({
-            success: true,
-            message: "User logged in...",
-            AccessToken
+            message: "User logged in..."
         })
     } catch (e) {
         console.error("UserLogin Error:", e)
@@ -112,6 +110,16 @@ const UserLogin = async (req, res) => {
             success: false,
             message: e.message || "Something went wrong"
         })
+    }
+}
+
+const UserLogout = async (req, res) => {
+    try {
+        res.clearCookie('token')
+
+        return res.status(200).json({ message: "Successfully logout..." })
+    } catch (error) {
+        res.status(500).json({ message: `something wrong.. ${error}` })
     }
 }
 
@@ -209,7 +217,7 @@ const ChangePassword = async (req, res) => {
 const UserData = async (req, res) => {
     try {
         const { userId } = req.userInfo
-        const user = await UserModel.findById( userId ).select('-password')
+        const user = await UserModel.findById(userId).select('-password')
 
         if (!user) {
             return res.status(404).json({
@@ -218,17 +226,16 @@ const UserData = async (req, res) => {
         }
 
         return res.status(200).json({
+            isAuthenticated:true,
             data: user
         })
     } catch (error) {
         console.error("Error fetching user data:", error)
-    
-    // Handle invalid Mongoose ObjectId format specifically
-    if (error.name === 'CastError') {
-      return res.status(400).json({ message: "Invalid user ID format" })
-    }
+        if (error.name === 'CastError') {
+            return res.status(400).json({ message: "Invalid user ID format" })
+        }
 
-    return res.status(500).json({ message: "Internal Server Error" })
+        return res.status(500).json({ message: "Internal Server Error" })
     }
 
 }
@@ -258,4 +265,4 @@ const UpdateData = async (req, res) => {
 
 }
 
-module.exports = { UserRegister, UserLogin, ResetPasswordMail, verifyOtp, ChangePassword, UpdateData, UserData }
+module.exports = { UserRegister, UserLogin, ResetPasswordMail, verifyOtp, ChangePassword, UpdateData, UserData, UserLogout }

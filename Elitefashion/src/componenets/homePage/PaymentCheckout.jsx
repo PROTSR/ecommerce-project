@@ -90,7 +90,14 @@ export default function PaymentCheckout() {
 
   const handlePlaceOrder = async () => {
     try {
-       if(paymentMethod === 'card' && (!paymentDetail.cardNumber || !paymentDetail.cardDate || !paymentDetail.cvc))return
+      //  if(paymentMethod === 'card' && (!paymentDetail.cardNumber || !paymentDetail.cardDate || !paymentDetail.cvc))return
+       if(paymentDetail === 'card'){
+            const date = paymentDetail.cardDate.length === 4
+            const cvv = paymentDetail.cvc.length === 3
+            const cardNumber = paymentDetail.cardNumber.length === 15
+
+            if(!date || !cvv || !cardNumber)return
+        }
       const orderObj = {
         customerId: userDetail._id,
         orderItems: [...cartItems],

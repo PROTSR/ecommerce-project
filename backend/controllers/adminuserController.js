@@ -78,12 +78,10 @@ const AdminLogin = async (req, res) => {
             }
         )
 
-        res.cookie('token', AccessToken)
+        res.cookie('adminToken', AccessToken)
 
        return res.status(201).json({
-            success: true,
-            mesage: "user logged in..",
-             AccessToken
+            mesage: "user logged in.."
         })
     } catch (e) {
         return res.status(500).json({
@@ -94,6 +92,16 @@ const AdminLogin = async (req, res) => {
 
 
 
+}
+
+const AdminLogout = async (req,res)=>{
+    try {
+        res.clearCookie('adminToken')
+
+        return res.status(200).json({message:"Successfully logout..."})
+    } catch (error) {
+        res.status(500).json({message:`something wrong.. ${error}`})
+    }
 }
 
 const AdminResetPasswordMail = async (req, res) => {
@@ -203,4 +211,4 @@ const AdminData = async (req,res)=>{
 }
 
 
-module.exports = { AdminRegister, AdminLogin,AdminResetPasswordMail,verifyOtp,ChangePassword,AdminData }
+module.exports = { AdminRegister, AdminLogin,AdminResetPasswordMail,verifyOtp,ChangePassword,AdminData,AdminLogout }

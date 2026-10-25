@@ -1,5 +1,5 @@
 const express = require('express')
-const {deleteProduct,updateProduct,AddProduct,getProductById,getAllProducts,addOrder} = require('../controllers/productController')
+const {deleteProduct,updateProduct,AddProduct,getProductById,getAllProducts,addOrder,productAnalytics} = require('../controllers/productController')
 const AdminMiddleware = require('../middleware/AdminMiddleware')
 const authMiddleware = require('../middleware/authmiddleware')
 const route = express.Router()
@@ -10,6 +10,7 @@ route.get('/get/:id',getProductById)
 route.post('/add',AdminMiddleware,AddProduct)
 route.put('/update/:id',AdminMiddleware,updateProduct)
 route.delete('/delete/:id',AdminMiddleware,deleteProduct)
+route.get('/analytics',AdminMiddleware,productAnalytics)
 route.post('/orders',authMiddleware,addOrder)
 
 

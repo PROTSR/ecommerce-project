@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 import { ThemData } from '../contex/Theme'
 
 const Nav = () => {
-    const { userToken } = useContext(ThemData)
+    const { userDetail } = useContext(ThemData)
     return (
         <nav className=' md:flex md:justify-between md:px-14  md:items-center md:h-15 md:sticky md:top-0 md:z-50 bg-gray-200  '>
 
@@ -21,7 +21,7 @@ const Nav = () => {
                 <NavLink to='/'>Home</NavLink>
                 <NavLink to='/cart'><ShoppingCart /></NavLink>
                 {
-                    userToken
+                    userDetail
                         ? <NavLink to='/profile'><UserRoundPen /></NavLink>
                         : (
                             <>

@@ -79,7 +79,7 @@ const OrderSchema = new mongoose.Schema({
     },
     totalPrice: {
         type: Number,
-        reuired: true,
+        required: true,
         default: 0
     },
     isPaid: {

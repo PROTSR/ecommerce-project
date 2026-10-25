@@ -141,10 +141,18 @@ const addToCart = async (req, res) => {
 const addOrder = async (req, res) => {
     try {
         const { userId } = req.userInfo
-        const { orderItems, customerId, taxPrice, shippingCharge, totalPrice,paymentResult,paymentType, paymentDetail,shippingAddress,isDelevered,isPaid,paidAt} = req.body
+        const { orderItems, customerId, taxPrice, shippingCharge, totalPrice, paymentResult, paymentType, paymentDetail, shippingAddress, isDelevered, isPaid, paidAt } = req.body
 
 
-        
+        if(paymentType === 'card'){
+            const date = paymentDetail.cardDate.length === 4
+            const cvv = paymentDetail.cvc.length === 3
+            const cardNumber = paymentDetail.cardNumber.length === 15
+
+            if(!date || !cvv || !cardNumber){
+                return res.status(400).json({message:'Enter valid details'})
+            }
+        }
 
         if (!orderItems || orderItems.length === 0) {
             return res.status(400).json({ message: 'no order items provided' })
@@ -187,7 +195,7 @@ const addOrder = async (req, res) => {
                 color: item.color,
                 name: item.name,
                 size: sizeObj.size,
-                image:item.image,
+                image: item.image,
                 price: sizeObj.price,
                 quantity: item.quantity,
                 sku: item.sku
@@ -203,13 +211,13 @@ const addOrder = async (req, res) => {
             shippingCharge: 15,
             totalPrice: subTotal + tax + 15,
             paymentType: paymentType,
-            paymentDetail: paymentDetail,
+            paymentDetail: paymentType === 'card' ? paymentDetail: {cardNumber:null,cardDate:null,cvc:null},
             paymentResult: paymentResult,
-            shippingAddress:shippingAddress,
+            shippingAddress: shippingAddress,
             isPaid: isPaid,
             paidAt: paidAt,
             isDelevered: isDelevered,
-            deleveredAt:null
+            deleveredAt: null
         })
         // if (!newOrder) {
 
@@ -222,5 +230,46 @@ const addOrder = async (req, res) => {
     }
 }
 
+const productAnalytics = async (req, res) => {
+    try {
+        const stats = await Order.aggregate([
+            {
+                $lookup:{
+                    from:"Products",
+                    localField:""
+                }
+            },
+            {
+                $addFields:{
+                    subtotal:{
+                        $subtract : [ {$subtract:["$totalPrice","$taxPrice"]},"$shippingCharge"]
+                    },
+                    totalProducts:{
+                        $sum:"$orderItems.quantity"
+                    }
+                }
+            },
+           
+            {
+                $group: {
+                    _id:null,
+                    totalSales:{$sum:"$subtotal"},
+                    products:{
+                        $sum:"$totalProducts"
+                    },
+                    orders:{
+                        $sum:1
+                    }
+                }
+            }
+        ])
 
-module.exports = { deleteProduct, updateProduct, AddProduct, getProductById, getAllProducts, addToCart, addOrder }
+        res.status(200).json({data:stats})
+    } catch (e) {
+        console.log(e)
+        res.status(500).json({message:`something wrong ${e}` })
+    }
+}
+
+
+module.exports = { deleteProduct, updateProduct, AddProduct, getProductById, getAllProducts, addToCart, addOrder,productAnalytics }

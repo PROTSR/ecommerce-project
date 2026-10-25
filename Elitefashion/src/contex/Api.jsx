@@ -8,20 +8,20 @@ export const Api = axios.create({
   }
 })
 
-Api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('adminToken') ||
-      sessionStorage.getItem('adminToken') ||
-      localStorage.getItem('usertoken') ||
-      sessionStorage.getItem('usertoken')
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
-    }
-    return config
-  },
-  (error) => Promise.reject(error)
+// Api.interceptors.request.use(
+//   (config) => {
+//     const token = localStorage.getItem('adminToken') ||
+//       sessionStorage.getItem('adminToken') ||
+//       localStorage.getItem('usertoken') ||
+//       sessionStorage.getItem('usertoken')
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`
+//     }
+//     return config
+//   },
+//   (error) => Promise.reject(error)
 
-)
+// )
 
 export const getUser = async () => {
   try {
@@ -35,7 +35,14 @@ export const getUser = async () => {
 
 }
 
-
+export const UserLogout=async ()=>{
+  try {
+    const res = await Api.post('api/auth/logout')
+    return res
+  } catch (error) {
+    throw error
+  }
+}
 
 export const SignupMethod = async (data) => {
   try {
@@ -118,6 +125,15 @@ export const AdminLoginMethod = async (data) => {
   }
 }
 
+export const AdminLogout=async ()=>{
+  try {
+    const res = await Api.post('api/admin_auth/admin-logout')
+    return res
+  } catch (error) {
+    throw error
+  }
+}
+
 export const AdminsendOtp = async (email) => {
   try {
     const res = await Api.post('/api/admin_auth/forgot-password', email)
@@ -127,6 +143,7 @@ export const AdminsendOtp = async (email) => {
     throw e
   }
 }
+
 export const AdminverifyOtp = async (data) => {
   try {
     const res = await Api.post('/api/admin_auth/otpverify', data)
@@ -136,6 +153,7 @@ export const AdminverifyOtp = async (data) => {
     throw e
   }
 }
+
 export const AdminresetPassword = async (data) => {
   try {
     const res = await Api.post('/api/admin_auth/change-password', data)
@@ -145,6 +163,7 @@ export const AdminresetPassword = async (data) => {
     throw e
   }
 }
+
 // 
 // products api
 

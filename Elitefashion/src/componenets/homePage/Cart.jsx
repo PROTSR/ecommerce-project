@@ -23,7 +23,7 @@ export default function Cart() {
   };
 
   const removeItem = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
+    setCartItems((prev) => prev.filter((item,i) => i !== id));
   };
 
   const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
@@ -97,7 +97,7 @@ export default function Cart() {
                     {(item.price * item.quantity).toFixed(2)}
                   </span>
                   <button
-                    onClick={() => removeItem(item.id)}
+                    onClick={() => removeItem(idx)}
                     className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                     aria-label="Remove item"
                   >
